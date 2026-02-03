@@ -27,7 +27,7 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 np.random.seed(RANDOM_SEED)
 scaler = MinMaxScaler()
 
-# --- Generate Users ---
+# --- Users ---
 customer_ids = np.arange(1000, 1000 + N_CUSTOMERS)
 df_users = pd.DataFrame({
     'UserID': customer_ids,
@@ -35,7 +35,7 @@ df_users = pd.DataFrame({
     'Age': np.random.randint(AGE_MIN, AGE_MAX, size=N_CUSTOMERS)
 })
 
-# --- Generate Items ---
+# --- Items ---
 item_ids = np.arange(500, 500 + N_ITEMS)
 item_prices = np.random.randint(PRICE_MIN, PRICE_MAX, size=N_ITEMS)
 item_price_map = dict(zip(item_ids, item_prices))
@@ -45,7 +45,7 @@ df_items = pd.DataFrame({
     'Price': item_prices
 })
 
-# --- Generate Transactions ---
+# --- Transactions ---
 np.random.seed(None)
 transaction_ids = np.arange(1, N_TRANSACTIONS + 1)
 transaction_user_ids = np.random.choice(customer_ids, size=N_TRANSACTIONS)
@@ -56,7 +56,7 @@ df_transactions = pd.DataFrame({
     'Timestamp': timestamps
 })
 
-# --- Generate Purchased Items (Junction Table) ---
+# --- Purchased Items (Junction Table) ---
 n_items_in_cart = np.random.randint(CART_SIZE_MIN, CART_SIZE_MAX, size=N_TRANSACTIONS)
 cart_transaction_ids = np.repeat(transaction_ids, n_items_in_cart)
 cart_item_ids = np.concatenate([
@@ -108,7 +108,6 @@ df_transaction_amounts = pd.DataFrame({
     'TotalAmount': billed_amounts
 })
 
-# --- Save CSVs ---
 dataframes_and_files = [
     (df_users, 'users.csv'),
     (df_items, 'items.csv'),
@@ -117,9 +116,9 @@ dataframes_and_files = [
     (df_purchased_items, 'purchased_items.csv'),
     (df_fraud_patterns, 'fraud_patterns.csv'),
 ]
+
 for df, filename in dataframes_and_files:
     df.to_csv(os.path.join(OUTPUT_FOLDER, filename), index=False)
 
-# --- Reporting ---
 fraud_rate = fraud_indicators.mean()
 print(f"Dataset Built! Fraud Rate: {fraud_rate:.2%}")
