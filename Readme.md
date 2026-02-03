@@ -1,41 +1,54 @@
-# Fraud Detection Dataset
+# Synthetic Fraud Dataset Generator
 
-🔒 Dataset Description
-The Financial Fraud Detection Dataset contains data related to financial transactions and fraudulent patterns. It is designed for the purpose of training and evaluating machine learning models for fraud detection.
+This project generates a synthetic transactional dataset for fraud detection research and model development. The generated data simulates realistic user, item, and transaction behaviors, including fraudulent activity.
 
-📁 Dataset Structure
-The dataset is organized within the "data" folder and consists of several subfolders, each containing CSV files with specific information related to financial transactions, customer profiles, fraudulent patterns, transaction amounts, and merchant information. The dataset structure is as follows:
+## Overview
 
-- 📂 data
-  - 📂 Transaction Data
-    - transaction_records.csv: Contains transaction records with details such as transaction ID, date, amount, and customer ID.
-    - transaction_metadata.csv: Contains additional metadata for each transaction.
+The main script, `synthetic_dataset_gen.py`, creates several CSV files representing users, items, transactions, purchased items, transaction amounts, and fraud patterns. The data is designed to support feature engineering and machine learning experiments for fraud detection.
 
-  - 📂 Customer Profiles
-    - customer_data.csv: Includes customer profiles with information such as name, age, address, and contact details.
-    - account_activity.csv: Provides details of customer account activity, including account balance, transaction history, and account status.
+## Data Generation Logic
 
-  - 📂 Fraudulent Patterns
-    - fraud_indicators.csv: Contains indicators of fraudulent patterns and suspicious activities.
-    - suspicious_activity.csv: Provides specific details of transactions flagged as suspicious.
+- **Users**: Each user has a unique ID, name, and age, randomly assigned within a realistic range.
+- **Items**: Each item/product has a unique ID, name, and price, with prices sampled from a specified range.
+- **Transactions**: Each transaction is linked to a user and timestamped within a two-year period.
+- **Purchased Items**: For each transaction, a random set of items and quantities is selected to simulate a shopping cart.
+- **Amounts**: The true amount for each transaction is calculated as the sum of item prices times quantities. The billed amount may be altered by a fraud multiplier to simulate over- or under-charging.
+- **Fraud & Behavioral Logic**:
+  - Fraud is simulated by randomly applying multipliers to the billed amount.
+  - User behavior is modeled by assigning each user a historical average spending value and tracking transaction frequency.
+  - Anomaly scores are computed based on billing anomalies, transaction frequency, and spending spikes.
+- **Fraud Calculation**: Each transaction receives a fraud probability score based on the above features. Transactions with a score above a configurable threshold are labeled as fraudulent.
 
-  - 📂 Transaction Amounts
-    - amount_data.csv: Includes transaction amounts for each transaction.
-    - anomaly_scores.csv: Provides anomaly scores for transaction amounts, indicating potential fraudulence.
+## Output Files
 
-  - 📂 Merchant Information
-    - merchant_data.csv: Contains information about merchants involved in transactions.
-    - transaction_category_labels.csv: Provides category labels for different transaction types.
+All generated CSVs are saved in the `frauds_dataset` folder:
+- `users.csv`: List of users with demographic info.
+- `items.csv`: List of items/products with prices.
+- `transactions.csv`: Transaction records with user and timestamp.
+- `purchased_items.csv`: Junction table of items and quantities per transaction.
+- `transaction_amounts.csv`: True and billed amounts per transaction.
+- `fraud_patterns.csv`: Fraud indicator and risk score per transaction.
 
-📂 src
-- data.py: Python file containing code to generate the dataset based on real-world data.
+## Customization
 
-💡 Usage
-This dataset can be used for various purposes, including:
+You can adjust dataset size, fraud rates, price ranges, and other parameters by editing the constants at the top of `synthetic_dataset_gen.py`.
 
-- Developing and evaluating machine learning models for financial fraud detection.
-- Conducting research on fraud detection algorithms and techniques.
-- Training data analysts and data scientists on fraud detection methodologies.
+## Usage
 
-Feel free to use this dataset in your projects, experiments, or research. You are encouraged to create notebooks or other analysis tools to explore and visualize the data. If you find the dataset useful, please consider upvoting to show your support.
+1. Install Python dependencies:
+   ```
+   pip install pandas numpy scikit-learn
+   ```
+2. Run the generator:
+   ```
+   python synthetic_dataset_gen.py
+   ```
+3. The generated CSVs will be available in the `frauds_dataset` directory.
 
+## Next Steps
+
+- Use the generated CSVs for feature engineering and model training in a separate notebook or script.
+- See the code comments in `synthetic_dataset_gen.py` for detailed explanations of each step.
+
+---
+This generator is intended for research, prototyping, and educational purposes.
