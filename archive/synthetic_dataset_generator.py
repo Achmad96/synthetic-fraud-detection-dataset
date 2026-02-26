@@ -4,13 +4,13 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 
 from faker import Faker
-from faker.providers import company
+import faker_commerce
 
-OUTPUT_FOLDER = 'frauds_dataset'
+OUTPUT_FOLDER = 'fraud_dataset'
 RANDOM_SEED = 42
-N_TRANSACTIONS = 10 
-N_CUSTOMERS = 3 
-N_ITEMS = 25
+N_TRANSACTIONS = 5000
+N_CUSTOMERS = 1000
+N_ITEMS = 500
 AGE_MIN = 18
 AGE_MAX = 80
 PRICE_MIN = 10000
@@ -19,11 +19,11 @@ CART_SIZE_MIN = 1
 CART_SIZE_MAX = 10
 QUANTITY_MIN = 1
 QUANTITY_MAX = 50
-USER_HISTORY_MIN = 50000
-USER_HISTORY_MAX = 150000
+USER_HISTORY_MIN = 0
+USER_HISTORY_MAX = 20
 FRAUD_MULTIPLIERS = [1.11, 1.5, 0.8]
-FRAUD_MULTIPLIER_PROBS = [0.80, 0.10, 0.10]
-FRAUD_THRESHOLD = 0.75
+FRAUD_MULTIPLIER_PROBS = [0.60, 0.20, 0.20]
+FRAUD_THRESHOLD = 0.65
 TIMEZONE = 'Asia/Jakarta'
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
@@ -32,7 +32,7 @@ np.random.seed(RANDOM_SEED)
 scaler = MinMaxScaler()
 
 fake = Faker()
-fake.add_provider(company)
+fake.add_provider(faker_commerce.Provider)
 
 # Users
 customer_ids = np.arange(1000, 1000 + N_CUSTOMERS)
@@ -48,7 +48,7 @@ item_prices = np.random.randint(PRICE_MIN, PRICE_MAX, size=N_ITEMS)
 item_price_map = dict(zip(item_ids, item_prices))
 df_items = pd.DataFrame({
     'ItemID': item_ids,
-    'ItemName': [fake.random_company_product() for _ in item_ids],
+    'ItemName': [fake.ecommerce_name() for _ in item_ids],
     'Price': item_prices
 })
 
@@ -79,11 +79,11 @@ df_purchased_items = pd.DataFrame({
 df_purchased_items['LineTotal'] = (
     df_purchased_items['ItemID'].map(item_price_map) * df_purchased_items['Quantity'] # type: ignore
 )
+
 true_amounts = (
     df_purchased_items.groupby('TransactionID')['LineTotal']
-    .values
     .sum()
-    .reindex(list(transaction_ids), fill_value=0).astype(float)
+    .reindex(list(transaction_ids), fill_value=0).astype(float) # type: ignore
 )
 billed_amounts = true_amounts * np.random.choice(
     FRAUD_MULTIPLIERS, size=N_TRANSACTIONS, p=FRAUD_MULTIPLIER_PROBS
@@ -91,10 +91,17 @@ billed_amounts = true_amounts * np.random.choice(
 
 user_freq = pd.Series(transaction_user_ids).value_counts()
 user_history_avg = np.random.uniform(USER_HISTORY_MIN, USER_HISTORY_MAX, size=N_CUSTOMERS)
-user_history_avg_map = dict(zip(customer_ids, user_history_avg))
+temp_history_df = pd.DataFrame({
+    'UserID': transaction_user_ids,
+    'BilledAmount': billed_amounts
+})
+
+# Calculate the TRUE average spending for each user based on their generated transactions
+user_history_avg_map = temp_history_df.groupby('UserID')['BilledAmount'].mean().to_dict()
+# user_history_avg_map = dict(zip(customer_ids, user_history_avg))
 freq_scores = np.array([user_freq.get(uid, 0) for uid in transaction_user_ids])
 spikes = np.array([
-    billed_amounts[i] / user_history_avg_map[transaction_user_ids[i]]
+    billed_amounts.iloc[i] / user_history_avg_map[transaction_user_ids[i]]
     for i in range(N_TRANSACTIONS)
 ])
 
