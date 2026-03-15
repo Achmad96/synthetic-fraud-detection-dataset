@@ -1,54 +1,77 @@
 # Synthetic Fraud Dataset Generator
 
-This project generates a synthetic transactional dataset for fraud detection research and model development. The generated data simulates realistic user, item, and transaction behaviors, including fraudulent activity.
+This project generates a synthetic transactional dataset for fraud detection research and model development using NVIDIA NeMo Data Designer.
 
 ## Overview
 
-The main script, `synthetic_dataset_gen.py`, creates several CSV files representing users, items, transactions, purchased items, transaction amounts, and fraud patterns. The data is designed to support feature engineering and machine learning experiments for fraud detection.
+The main workflow is implemented as a Jupyter notebook: `synthetic_dataset_generator.ipynb`. It uses NeMo Data Designer to define a column schema, sampling distributions, and fraud logic.
+
+The generator produces a realistic transactional dataset where fraud is introduced via:
+
+- transaction amount discrepancies (billed vs true amount)
+- unusual item quantity patterns compared to recent history
+- a judge model that labels transactions as fraudulent or not
 
 ## Data Generation Logic
 
-- **Users**: Each user has a unique ID, name, and age, randomly assigned within a realistic range.
-- **Items**: Each item/product has a unique ID, name, and price, with prices sampled from a specified range.
-- **Transactions**: Each transaction is linked to a user and timestamped within a two-year period.
-- **Purchased Items**: For each transaction, a random set of items and quantities is selected to simulate a shopping cart.
-- **Amounts**: The true amount for each transaction is calculated as the sum of item prices times quantities. The billed amount may be altered by a fraud multiplier to simulate over- or under-charging.
-- **Fraud & Behavioral Logic**:
-  - Fraud is simulated by randomly applying multipliers to the billed amount.
-  - User behavior is modeled by assigning each user a historical average spending value and tracking transaction frequency.
-  - Anomaly scores are computed based on billing anomalies, transaction frequency, and spending spikes.
-- **Fraud Calculation**: Each transaction receives a fraud probability score based on the above features. Transactions with a score above a configurable threshold are labeled as fraudulent.
+The notebook defines and samples the following columns:
+
+- `timestamp`: realistic datetime distribution
+- `transaction_id` / `customer_id`: UUIDs
+- `transaction_total`: sampled transaction amount
+- `merchant_category`, `payment_method`, `region`: categorical distributions
+- `total_quantity`: total items in a transaction
+- `anomaly_type`: determines whether to inject fraud types (quantity, total, both, none)
+- `total_quantity_7d`: computed based on anomaly type (simulating recent history)
+- `reported_transaction_total`: computed with possible fraud modification
+- `fraud_analysis`: judged by an LLM judge model and turned into `is_fraud` + `reasoning`
 
 ## Output Files
 
-All generated CSVs are saved in the `frauds_dataset` folder:
-- `users.csv`: List of users with demographic info.
-- `items.csv`: List of items/products with prices.
-- `transactions.csv`: Transaction records with user and timestamp.
-- `purchased_items.csv`: Junction table of items and quantities per transaction.
-- `transaction_amounts.csv`: True and billed amounts per transaction.
-- `fraud_patterns.csv`: Fraud indicator and risk score per transaction.
+The notebook writes the generated dataset to:
 
-## Customization
+- `synthetic_dataset_output/synthetic_transactions.csv`
 
-You can adjust dataset size, fraud rates, price ranges, and other parameters by editing the constants at the top of `synthetic_dataset_gen.py`.
+It also saves artifacts and analysis output in:
 
-## Usage
+- `synthetic_dataset_output/synthetic_fraud_artifacts/`
 
-1. Install Python dependencies:
+## Setup and Usage
+
+1. Create and activate a Python environment (recommended):
+
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate
    ```
-   pip install pandas numpy scikit-learn
+
+2. Install the required dependencies (from the notebook environment):
+
+   ```bash
+   pip install -r requirements.txt
    ```
-2. Run the generator:
+
+3. Configure required environment variables (example):
+
+   ```powershell
+   $env:NEMO_DATADESIGNER_BASE_URL = "https://<your-nemo-endpoint>"
+   $env:MODEL_PROVIDER = "nvidia"
+   $env:SYSTEM_PROMPT = "<your-system-prompt>"
+   $env:STRUCTURE_MODEL_ID = "<structure-model-id>"
+   $env:STRUCTURE_MODEL_ALIAS = "structure"
+   $env:JUDGE_MODEL_ID = "<judge-model-id>"
+   $env:JUDGE_MODEL_ALIAS = "judge"
    ```
-   python synthetic_dataset_gen.py
-   ```
-3. The generated CSVs will be available in the `frauds_dataset` directory.
+
+4. Run the notebook in Jupyter or VS Code:
+   - Open `synthetic_dataset_generator.ipynb`
+   - Execute the cells top-to-bottom
 
 ## Next Steps
 
-- Use the generated CSVs for feature engineering and model training in a separate notebook or script.
-- See the code comments in `synthetic_dataset_gen.py` for detailed explanations of each step.
+- Use `synthetic_dataset_output/synthetic_transactions.csv` for feature engineering and model training.
+- Adjust the notebook’s sampler configurations and judge prompt to tune fraud patterns.
 
 ---
-This generator is intended for research, prototyping, and educational purposes.
+
+This notebook-based generator is intended for research, prototyping, and educational purposes.
