@@ -1,0 +1,289 @@
+{
+    "num_records": 1000,
+    "target_num_records": 1000,
+    "column_statistics": [
+        {
+            "column_name": "timestamp",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 776,
+            "pyarrow_dtype": "string",
+            "simple_dtype": "string",
+            "column_type": "sampler",
+            "sampler_type": "datetime",
+            "distribution_type": "other",
+            "distribution": null
+        },
+        {
+            "column_name": "transaction_id",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 1000,
+            "pyarrow_dtype": "string",
+            "simple_dtype": "string",
+            "column_type": "sampler",
+            "sampler_type": "uuid",
+            "distribution_type": "other",
+            "distribution": null
+        },
+        {
+            "column_name": "customer_id",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 1000,
+            "pyarrow_dtype": "string",
+            "simple_dtype": "string",
+            "column_type": "sampler",
+            "sampler_type": "uuid",
+            "distribution_type": "other",
+            "distribution": null
+        },
+        {
+            "column_name": "transaction_total",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 1000,
+            "pyarrow_dtype": "int64",
+            "simple_dtype": "int",
+            "column_type": "sampler",
+            "sampler_type": "uniform",
+            "distribution_type": "numerical",
+            "distribution": {
+                "min": 4391,
+                "max": 9987150,
+                "mean": 5103297.7,
+                "stddev": 2898513.51,
+                "median": 5340687.0
+            }
+        },
+        {
+            "column_name": "merchant_category",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 5,
+            "pyarrow_dtype": "string",
+            "simple_dtype": "string",
+            "column_type": "sampler",
+            "sampler_type": "category",
+            "distribution_type": "categorical",
+            "distribution": {
+                "most_common_value": "Clothing",
+                "least_common_value": "Sports",
+                "histogram": {
+                    "categories": [
+                        "Clothing",
+                        "Groceries",
+                        "Electronics",
+                        "Home & Garden",
+                        "Sports"
+                    ],
+                    "counts": [
+                        276,
+                        261,
+                        217,
+                        145,
+                        101
+                    ]
+                }
+            }
+        },
+        {
+            "column_name": "payment_method",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 4,
+            "pyarrow_dtype": "string",
+            "simple_dtype": "string",
+            "column_type": "sampler",
+            "sampler_type": "category",
+            "distribution_type": "categorical",
+            "distribution": {
+                "most_common_value": "Credit Card",
+                "least_common_value": "PayPal",
+                "histogram": {
+                    "categories": [
+                        "Credit Card",
+                        "Bank Transfer",
+                        "Debit Card",
+                        "PayPal"
+                    ],
+                    "counts": [
+                        302,
+                        284,
+                        260,
+                        154
+                    ]
+                }
+            }
+        },
+        {
+            "column_name": "region",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 5,
+            "pyarrow_dtype": "string",
+            "simple_dtype": "string",
+            "column_type": "sampler",
+            "sampler_type": "category",
+            "distribution_type": "categorical",
+            "distribution": {
+                "most_common_value": "Jakarta",
+                "least_common_value": "Semarang",
+                "histogram": {
+                    "categories": [
+                        "Jakarta",
+                        "Surabaya",
+                        "Bandung",
+                        "Medan",
+                        "Semarang"
+                    ],
+                    "counts": [
+                        315,
+                        243,
+                        188,
+                        158,
+                        96
+                    ]
+                }
+            }
+        },
+        {
+            "column_name": "total_quantity",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 100,
+            "pyarrow_dtype": "int64",
+            "simple_dtype": "int",
+            "column_type": "sampler",
+            "sampler_type": "uniform",
+            "distribution_type": "numerical",
+            "distribution": {
+                "min": 1,
+                "max": 100,
+                "mean": 50.64,
+                "stddev": 28.56,
+                "median": 51.0
+            }
+        },
+        {
+            "column_name": "anomaly_type",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 4,
+            "pyarrow_dtype": "string",
+            "simple_dtype": "string",
+            "column_type": "sampler",
+            "sampler_type": "category",
+            "distribution_type": "categorical",
+            "distribution": {
+                "most_common_value": "None",
+                "least_common_value": "Both",
+                "histogram": {
+                    "categories": [
+                        "None",
+                        "QuantityOnly",
+                        "TotalOnly",
+                        "Both"
+                    ],
+                    "counts": [
+                        900,
+                        44,
+                        31,
+                        25
+                    ]
+                }
+            }
+        },
+        {
+            "column_name": "high_ratio",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 283,
+            "pyarrow_dtype": "double",
+            "simple_dtype": "float",
+            "column_type": "sampler",
+            "sampler_type": "uniform",
+            "distribution_type": "numerical",
+            "distribution": {
+                "min": 2.1,
+                "max": 5.0,
+                "mean": 3.54,
+                "stddev": 0.86,
+                "median": 3.5
+            }
+        },
+        {
+            "column_name": "normal_ratio",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 151,
+            "pyarrow_dtype": "double",
+            "simple_dtype": "float",
+            "column_type": "sampler",
+            "sampler_type": "uniform",
+            "distribution_type": "numerical",
+            "distribution": {
+                "min": 0.5,
+                "max": 2.0,
+                "mean": 1.26,
+                "stddev": 0.44,
+                "median": 1.26
+            }
+        },
+        {
+            "column_name": "total_quantity_7d",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 907,
+            "pyarrow_dtype": "double",
+            "simple_dtype": "float",
+            "column_type": "expression"
+        },
+        {
+            "column_name": "reduction_factor",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 81,
+            "pyarrow_dtype": "double",
+            "simple_dtype": "float",
+            "column_type": "sampler",
+            "sampler_type": "uniform",
+            "distribution_type": "numerical",
+            "distribution": {
+                "min": 0.1,
+                "max": 0.9,
+                "mean": 0.5,
+                "stddev": 0.23,
+                "median": 0.51
+            }
+        },
+        {
+            "column_name": "reported_transaction_total",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 1000,
+            "pyarrow_dtype": "int64",
+            "simple_dtype": "int",
+            "column_type": "expression"
+        },
+        {
+            "column_name": "fraud_analysis",
+            "num_records": 1000,
+            "num_null": 0,
+            "num_unique": 787,
+            "pyarrow_dtype": "struct<is_fraud: struct<reasoning: string, score: string>>",
+            "simple_dtype": "dict",
+            "column_type": "llm-judge",
+            "completion_tokens_mean": 51.44,
+            "completion_tokens_median": 49.0,
+            "completion_tokens_stddev": 9.85,
+            "prompt_tokens_mean": 391.1,
+            "prompt_tokens_median": 391.0,
+            "prompt_tokens_stddev": 0.42
+        }
+    ],
+    "side_effect_column_names": [
+        "fraud_analysis__reasoning_trace"
+    ],
+    "column_profiles": null
+}
